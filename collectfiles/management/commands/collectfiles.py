@@ -24,11 +24,14 @@ Arguments:
         """
         Small log helper
         """
-        self.stdout.write(msg)
+        self.stdout.write(msg + "\n")
 
     def handle(self, *args, **options):
         if len(args) < 2:
             raise CommandError("You must provide at least 2 arguments, <destination> and <source_dir>")
+
+        dest = args[0]
+        source_dirs = args[1:]
 
         # I made up the base_url (arg 2), it isn't needed for this
         storage = FileSystemStorage(dest, "/ignored/")
