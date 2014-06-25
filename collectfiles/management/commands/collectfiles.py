@@ -7,12 +7,18 @@ import os
 
 
 class Command(BaseCommand):
+    args = '<destination> <source_dir>...'
+    help = """
+Arguments:
+  <destination>
+                        Destination directory to collect files into
+  <source_dir>
+                        App source directory to collect, i.e. "features", "resources", etc
+"""
+
     def add_argumunts(self, parser):
-        parser.add_argument("dest", nargs=1, help="destination directory")
-        parser.add_argument(
-            "source_dir", nargs="+", 
-            help="app sourc_dir(s) to collect, i.e. features, lib, etc"
-        )
+        parser.add_argument("destination", nargs=1)
+        parser.add_argument("source_dir", nargs="+")
 
     def log(self, msg, level=2):
         """
@@ -20,7 +26,10 @@ class Command(BaseCommand):
         """
         self.stdout.write(msg)
 
-    def handle(self, dest, *source_dirs, **options):
+    def handle(self, *args, **options):
+        if len(args) < 2:
+            raise CommandError("You must provide at least 2 arguments, <destination> and <source_dir>")
+
         # I made up the base_url (arg 2), it isn't needed for this
         storage = FileSystemStorage(dest, "/ignored/")
 
