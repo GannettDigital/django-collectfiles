@@ -3,6 +3,8 @@ from django.contrib.staticfiles import finders, storage, utils
 from django.utils.datastructures import SortedDict
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from importlib import import_module
+from django.utils._os import upath
 import os
 
 
@@ -51,7 +53,25 @@ Arguments:
                           source_storage,
                           storage)
 
-class CustomAppStaticStorage(storage.AppStaticStorage):
+class AppStaticStorage(FileSystemStorage):
+    """
+    A file system storage backend that takes an app module and works
+    for the ``static`` directory of it.
+    """
+    prefix = None
+    source_dir = 'static'
+
+    def __init__(self, app, *args, **kwargs):
+        """
+        Returns a static file storage if available in the given app.
+        """
+        # app is the actual app module
+        mod = import_module(app)
+        mod_path = os.path.dirname(upath(mod.__file__))
+        location = os.path.join(mod_path, self.source_dir)
+        super(AppStaticStorage, self).__init__(location, *args, **kwargs)
+
+class CustomAppStaticStorage(AppStaticStorage):
     def __init__(self, source_dir, *args, **kwargs):
         self.source_dir = source_dir
         super(CustomAppStaticStorage, self).__init__(*args, **kwargs)
