@@ -5,8 +5,8 @@ setup(name="django-collectfiles",
       zip_safe=False,
       include_package_data=True,
       install_requires=[
-      	"django==1.4.14",
+      	"django>=1.4.14",
       ],
-      version="0.0.3",
+      version="0.0.4",
 )
 
