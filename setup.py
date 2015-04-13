@@ -7,6 +7,6 @@ setup(name="django-collectfiles",
       install_requires=[
       	"django<1.7",
       ],
-      version="0.0.5",
+      version="0.0.6",
 )
 
